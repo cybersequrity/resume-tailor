@@ -1,0 +1,499 @@
+{
+  "personal_info": {
+    "name": "Morgan Vance",
+    "headline": "Staff Cloud Infrastructure Engineer & Distributed Systems Architect",
+    "location": "Austin, TX",
+    "email": "morgan.vance@example.com",
+    "phone": "(555) 328-9104",
+    "linkedin": "https://www.linkedin.com/in/morgan-vance-cloud",
+    "github": "https://github.com/morgan-vance-demo",
+    "portfolio": "https://morganvance.dev",
+    "badge_credential": "AWS Certified Solutions Architect Professional | CKA Certified"
+  },
+  "professional_summary": {
+    "default_pitch": "Senior Cloud Infrastructure Engineer with 9+ years of experience architecting highly available, multi-region cloud platforms and Kubernetes orchestration systems. Proven track record reducing cloud infrastructure spend by 38% ($450K/year), engineering zero-downtime microservices migrations, and establishing GitOps continuous delivery pipelines maintaining 99.99% service availability across high-volume enterprise production environments.",
+    "specialties": [
+      "Multi-Region Cloud Architecture (AWS & GCP)",
+      "Kubernetes Orchestration & Service Mesh (EKS, Helm, Istio)",
+      "Infrastructure as Code & Policy as Code (Terraform, OpenTofu, Terragrunt)",
+      "Continuous Integration & GitOps Delivery (GitHub Actions, ArgoCD)",
+      "Observability & Site Reliability Engineering (Datadog, Prometheus, Grafana)",
+      "Cloud FinOps & Infrastructure Cost Optimization"
+    ]
+  },
+  "skills": {
+    "cloud_and_infrastructure": [
+      "Amazon Web Services (AWS)",
+      "Google Cloud Platform (GCP)",
+      "Kubernetes (EKS / GKE)",
+      "Terraform & OpenTofu",
+      "Docker & Containerd",
+      "Linux Systems Architecture",
+      "VPC & Hybrid Networking",
+      "Serverless Architecture (AWS Lambda)"
+    ],
+    "devops_and_automation": [
+      "GitHub Actions CI/CD",
+      "ArgoCD & GitOps",
+      "Helm Package Management",
+      "Ansible Configuration Management",
+      "Python & Bash Automation",
+      "Packer Golden Images",
+      "Zero-Downtime Deployment Strategies"
+    ],
+    "observability_and_reliability": [
+      "Datadog Enterprise APM",
+      "Prometheus & Grafana",
+      "OpenTelemetry Standards",
+      "Distributed Tracing & SRE Metrics",
+      "ELK & OpenSearch Stacks",
+      "Incident Response & Postmortems",
+      "Chaos Engineering Practices"
+    ],
+    "security_and_governance": [
+      "IAM & Principle of Least Privilege",
+      "HashiCorp Vault Secrets Management",
+      "SOC 2 Type II Audit Preparation",
+      "Container Image Security (Trivy, Snyk)",
+      "TLS / mTLS Encryption Architecture",
+      "CloudTrail & Security Incident Monitoring"
+    ]
+  },
+  "experience": [
+    {
+      "id": "role-stratos-2022",
+      "company": "Stratos Cloud Systems",
+      "title": "Staff Platform Infrastructure Engineer",
+      "role_title": "Staff Platform Infrastructure Engineer",
+      "location": "Austin, TX (Remote)",
+      "start_date": "2022-03",
+      "end_date": "Present",
+      "is_current": true,
+      "company_description": "Series D enterprise cloud data platform processing over 600M real-time streaming transactions daily.",
+      "skills": [
+        "AWS",
+        "Terraform",
+        "Kubernetes",
+        "ArgoCD",
+        "Karpenter",
+        "Python",
+        "Datadog",
+        "FinOps"
+      ],
+      "bullets": [
+        {
+          "id": "stratos-b1",
+          "framework": "XYZ",
+          "text": "Architected and orchestrated zero-downtime migration of 140+ microservices to Amazon EKS clusters, reducing annual cloud compute costs by 38% ($450K) while scaling platform transaction throughput by 300%.",
+          "action_x": "Architected and orchestrated zero-downtime migration of 140+ microservices to Amazon EKS clusters",
+          "metric_y": "reducing annual cloud compute costs by 38% ($450K) while scaling platform transaction throughput by 300%",
+          "context_z": "by implementing declarative Helm charts, Karpenter dynamic node provisioning, and spot instance fleet automation",
+          "tags": [
+            "#cloud",
+            "#kubernetes",
+            "#aws",
+            "#finops",
+            "#architecture"
+          ],
+          "relevance_keywords": [
+            "Kubernetes",
+            "EKS",
+            "AWS",
+            "Cost Optimization",
+            "Microservices",
+            "FinOps",
+            "Helm"
+          ],
+          "variations": [
+            {
+              "style": "metric-focused",
+              "text": "Saved $450,000 annually (38% compute reduction) and expanded transaction throughput 3x by migrating 140+ microservices to Amazon EKS with Karpenter autoscaling."
+            },
+            {
+              "style": "leadership-focused",
+              "text": "Led cross-functional platform migration to Amazon EKS across 9 product engineering squads, eliminating legacy container deployment friction and optimizing cloud spend."
+            },
+            {
+              "style": "technical-focused",
+              "text": "Designed high-density Kubernetes cluster infrastructure on AWS using Terraform and Karpenter, establishing multi-tenant namespaces with automated resource quotas and Spot instance fallback."
+            }
+          ]
+        },
+        {
+          "id": "stratos-b2",
+          "framework": "XYZ",
+          "text": "Engineered enterprise-wide GitOps delivery framework with ArgoCD and GitHub Actions, shortening deployment cycle times from 45 minutes to 4.2 minutes and cutting failed production rollouts by 82%.",
+          "action_x": "Engineered enterprise-wide GitOps delivery framework with ArgoCD and GitHub Actions",
+          "metric_y": "shortening deployment cycle times from 45 minutes to 4.2 minutes and cutting failed production rollouts by 82%",
+          "context_z": "by establishing progressive canary releases, automated smoke validation gates, and instant automated rollback triggers",
+          "tags": [
+            "#gitops",
+            "#devops",
+            "#argocd",
+            "#cicd",
+            "#automation"
+          ],
+          "relevance_keywords": [
+            "GitOps",
+            "ArgoCD",
+            "CI/CD",
+            "GitHub Actions",
+            "Canary Deployment",
+            "Rollback Automation"
+          ],
+          "variations": [
+            {
+              "style": "metric-focused",
+              "text": "Accelerated release frequency by 10x (45m to 4.2m) and dropped production incidents by 82% utilizing ArgoCD declarative GitOps pipelines and automated canary gates."
+            },
+            {
+              "style": "operations-focused",
+              "text": "Standardized continuous deployment workflows for 120+ software engineers, instituting immutable image signing, automated smoke testing, and zero-touch cluster reconciliations."
+            }
+          ]
+        },
+        {
+          "id": "stratos-b3",
+          "framework": "XYZ",
+          "text": "Constructed distributed observability platform utilizing OpenTelemetry, Prometheus, and Datadog, decreasing Mean Time to Detect (MTTD) from 24 minutes to under 2 minutes across 5 production regions.",
+          "action_x": "Constructed distributed observability platform utilizing OpenTelemetry, Prometheus, and Datadog",
+          "metric_y": "decreasing Mean Time to Detect (MTTD) from 24 minutes to under 2 minutes across 5 production regions",
+          "context_z": "by unifying distributed traces, custom metric aggregations, and context-rich synthetic alerting webhooks",
+          "tags": [
+            "#observability",
+            "#monitoring",
+            "#datadog",
+            "#sre",
+            "#opentelemetry"
+          ],
+          "relevance_keywords": [
+            "Observability",
+            "Datadog",
+            "Prometheus",
+            "OpenTelemetry",
+            "MTTD",
+            "Distributed Tracing",
+            "SRE"
+          ],
+          "variations": [
+            {
+              "style": "reliability-focused",
+              "text": "Reduced production outage discovery time by 91% (MTTD from 24m to <2m) by deploying unified OpenTelemetry instrumentation and automated SLI/SLO dashboards."
+            },
+            {
+              "style": "architectural-focused",
+              "text": "Integrated full-stack APM tracing and synthetic canary monitors across 5 AWS regions, delivering real-time latency diagnostics to engineering and customer success teams."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "role-helios-2019",
+      "company": "Helios Financial Technologies",
+      "title": "Senior Infrastructure & Cloud Security Engineer",
+      "role_title": "Senior Infrastructure & Cloud Security Engineer",
+      "location": "Denver, CO",
+      "start_date": "2019-06",
+      "end_date": "2022-02",
+      "is_current": false,
+      "company_description": "Fintech payment processing gateway facilitating secure ACH and card transaction networks for regional financial institutions.",
+      "skills": [
+        "Terraform",
+        "AWS",
+        "HashiCorp Vault",
+        "Docker",
+        "PostgreSQL",
+        "Python",
+        "SOC 2"
+      ],
+      "bullets": [
+        {
+          "id": "helios-b1",
+          "framework": "XYZ",
+          "text": "Refactored manual cloud infrastructure into 100% codified Terraform modules with automated policy validation, accelerating new environment provisioning from 14 days to 35 minutes.",
+          "action_x": "Refactored manual cloud infrastructure into 100% codified Terraform modules with automated policy validation",
+          "metric_y": "accelerating new environment provisioning from 14 days to 35 minutes",
+          "context_z": "by designing modular reusable VPC, database, and caching architectures with tfsec and Open Policy Agent guardrails",
+          "tags": [
+            "#terraform",
+            "#iac",
+            "#automation",
+            "#cloud",
+            "#security"
+          ],
+          "relevance_keywords": [
+            "Terraform",
+            "Infrastructure as Code",
+            "Policy as Code",
+            "Cloud Architecture",
+            "Provisioning"
+          ],
+          "variations": [
+            {
+              "style": "metric-focused",
+              "text": "Compressed client testing environment staging times by 98% (from 2 weeks to 35 minutes) through modularized Terraform architecture and automated linting checks."
+            },
+            {
+              "style": "governance-focused",
+              "text": "Instituted codified cloud governance policies across AWS production accounts using Terraform and tfsec, ensuring strict adherence to SOC 2 compliance baselines."
+            }
+          ]
+        },
+        {
+          "id": "helios-b2",
+          "framework": "XYZ",
+          "text": "Spearheaded enterprise secret rotation and identity federation using HashiCorp Vault and AWS IAM, eradicating hardcoded credentials across 65 services and passing SOC 2 Type II audit with zero findings.",
+          "action_x": "Spearheaded enterprise secret rotation and identity federation using HashiCorp Vault and AWS IAM",
+          "metric_y": "eradicating hardcoded credentials across 65 services and passing SOC 2 Type II audit with zero findings",
+          "context_z": "by implementing short-lived dynamic credentials, automated token leasing, and centralized audit logging",
+          "tags": [
+            "#security",
+            "#vault",
+            "#iam",
+            "#soc2",
+            "#compliance"
+          ],
+          "relevance_keywords": [
+            "HashiCorp Vault",
+            "Secrets Management",
+            "IAM",
+            "SOC 2",
+            "Compliance",
+            "Security Audit"
+          ],
+          "variations": [
+            {
+              "style": "compliance-focused",
+              "text": "Passed independent SOC 2 Type II security evaluation with zero non-conformances by introducing dynamic secret management and mutual TLS communication."
+            },
+            {
+              "style": "security-focused",
+              "text": "Replaced long-lived database and API credentials with automated HashiCorp Vault leases, eliminating high-severity vulnerability vectors across payment microservices."
+            }
+          ]
+        },
+        {
+          "id": "helios-b3",
+          "framework": "XYZ",
+          "text": "Optimized RDS PostgreSQL database cluster topologies and read-replica routing, cutting peak transaction query latency by 64% (210ms to 75ms) under sustained 15,000 QPS load.",
+          "action_x": "Optimized RDS PostgreSQL database cluster topologies and read-replica routing",
+          "metric_y": "cutting peak transaction query latency by 64% (210ms to 75ms) under sustained 15,000 QPS load",
+          "context_z": "by tuning connection pooling with PgBouncer, index reorganizations, and cross-AZ replica placement",
+          "tags": [
+            "#database",
+            "#postgresql",
+            "#performance",
+            "#aws-rds",
+            "#optimization"
+          ],
+          "relevance_keywords": [
+            "PostgreSQL",
+            "Database Performance",
+            "PgBouncer",
+            "RDS",
+            "Latency Optimization"
+          ],
+          "variations": [
+            {
+              "style": "performance-focused",
+              "text": "Slashed database query latency by 64% during peak billing cycles through PgBouncer connection multiplexing and read-replica workload separation."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "role-vanguard-2016",
+      "company": "Vanguard Digital Media",
+      "title": "Cloud Systems Administrator",
+      "role_title": "Cloud Systems Administrator",
+      "location": "Salt Lake City, UT",
+      "start_date": "2016-08",
+      "end_date": "2019-05",
+      "is_current": false,
+      "company_description": "Digital streaming network delivering interactive video media to over 15 million monthly subscribers.",
+      "skills": [
+        "Linux",
+        "Python",
+        "AWS",
+        "Nginx",
+        "Bash",
+        "Ansible",
+        "CloudWatch"
+      ],
+      "bullets": [
+        {
+          "id": "vanguard-b1",
+          "framework": "XYZ",
+          "text": "Automated server provisioning and patch management workflows across 300+ Linux EC2 instances with Ansible and Python, decreasing quarterly system patching cycles from 3 weekends to 4 hours.",
+          "action_x": "Automated server provisioning and patch management workflows across 300+ Linux EC2 instances with Ansible and Python",
+          "metric_y": "decreasing quarterly system patching cycles from 3 weekends to 4 hours",
+          "context_z": "by writing idempotent Ansible playbooks and scheduling automated rolling fleet updates via AWS Systems Manager",
+          "tags": [
+            "#linux",
+            "#ansible",
+            "#automation",
+            "#sysadmin",
+            "#patching"
+          ],
+          "relevance_keywords": [
+            "Ansible",
+            "Linux",
+            "Python",
+            "Automation",
+            "Systems Administration",
+            "Patch Management"
+          ],
+          "variations": [
+            {
+              "style": "efficiency-focused",
+              "text": "Replaced manual server patching with idempotent Ansible playbooks, reclaiming 40+ engineering hours per quarter and eliminating manual deployment errors."
+            }
+          ]
+        },
+        {
+          "id": "vanguard-b2",
+          "framework": "XYZ",
+          "text": "Designed high-availability Nginx caching reverse-proxy layer on AWS, increasing cache hit ratio from 68% to 94% and insulating origin application servers from sudden viral traffic surges.",
+          "action_x": "Designed high-availability Nginx caching reverse-proxy layer on AWS",
+          "metric_y": "increasing cache hit ratio from 68% to 94% and insulating origin application servers from sudden viral traffic surges",
+          "context_z": "by configuring intelligent edge caching policies, gzip compression, and TCP keepalive tuning",
+          "tags": [
+            "#nginx",
+            "#networking",
+            "#caching",
+            "#performance",
+            "#aws"
+          ],
+          "relevance_keywords": [
+            "Nginx",
+            "Reverse Proxy",
+            "Edge Caching",
+            "High Availability",
+            "Performance Tuning"
+          ],
+          "variations": [
+            {
+              "style": "performance-focused",
+              "text": "Boosted media asset cache hit ratio to 94% using distributed Nginx edge proxies, reducing upstream backend server load by 70% during peak events."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-terra-guard",
+      "name": "TerraGuard - Static Infrastructure as Code Security Scanner",
+      "url": "https://github.com/example-user/terra-guard",
+      "role": "Creator & Lead Maintainer",
+      "description": "Open-source static analysis CLI tool evaluating Terraform and OpenTofu files for cloud security anti-patterns and compliance risks before deployment.",
+      "tech_stack": [
+        "Go",
+        "Terraform",
+        "GitHub Actions",
+        "Docker"
+      ],
+      "bullets": [
+        {
+          "id": "tg-b1",
+          "text": "Authored parser in Go capable of scanning 1,000+ Terraform resource definitions in under 300ms, identifying misconfigured IAM permissions and exposed public buckets.",
+          "tags": [
+            "#golang",
+            "#security",
+            "#iac",
+            "#opensource"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "proj-k8s-cost-watcher",
+      "name": "KubeCostWatcher - Kubernetes Real-Time Namespace FinOps Daemon",
+      "url": "https://github.com/example-user/kubecost-watcher",
+      "role": "Core Contributor",
+      "description": "Lightweight in-cluster daemon tracking CPU/memory resource allocation vs utilization per namespace with Slack alerting webhooks.",
+      "tech_stack": [
+        "Python",
+        "Kubernetes API",
+        "Prometheus",
+        "Helm"
+      ],
+      "bullets": [
+        {
+          "id": "kcw-b1",
+          "text": "Built automated alerting bot that flagged over-provisioned staging workloads, saving contributing organizations an estimated $12K monthly in unused pod reservations.",
+          "tags": [
+            "#kubernetes",
+            "#finops",
+            "#python",
+            "#prometheus"
+          ]
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Colorado State University",
+      "degree": "Bachelor of Science in Computer Science",
+      "field_of_study": "Systems & Network Engineering",
+      "location": "Fort Collins, CO",
+      "graduation_date": "2016-05",
+      "gpa_or_honors": "Cum Laude",
+      "coursework": [
+        "Distributed Systems Architecture",
+        "Computer Network Protocols",
+        "Operating System Design",
+        "Database Management Systems",
+        "Information Security Fundamentals"
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "AWS Certified Solutions Architect \u2013 Professional",
+      "issuer": "Amazon Web Services",
+      "issue_date": "2023-04",
+      "expiration_date": "2026-04",
+      "credential_id": "AWS-PSA-948102",
+      "credential_url": "https://www.credly.com/org/amazon-web-services/badge/aws-certified-solutions-architect-professional",
+      "skills": [
+        "Multi-Tier Architecture",
+        "Disaster Recovery",
+        "Cloud Migration",
+        "Cost Optimization"
+      ]
+    },
+    {
+      "name": "Certified Kubernetes Administrator (CKA)",
+      "issuer": "The Linux Foundation & CNCF",
+      "issue_date": "2022-09",
+      "expiration_date": "2025-09",
+      "credential_id": "CKA-7740192",
+      "credential_url": "https://www.credly.com/org/the-linux-foundation/badge/certified-kubernetes-administrator-cka",
+      "skills": [
+        "Kubernetes Cluster Architecture",
+        "Workloads & Scheduling",
+        "Cluster Networking",
+        "Storage & Troubleshooting"
+      ]
+    },
+    {
+      "name": "HashiCorp Certified: Terraform Associate",
+      "issuer": "HashiCorp",
+      "issue_date": "2021-11",
+      "expiration_date": "2024-11",
+      "credential_id": "HC-TA-339184",
+      "credential_url": "https://www.credly.com/org/hashicorp/badge/hashicorp-certified-terraform-associate",
+      "skills": [
+        "Terraform CLI",
+        "IaC Modules",
+        "State Management",
+        "Cloud Providers"
+      ]
+    }
+  ]
+}

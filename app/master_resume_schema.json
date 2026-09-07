@@ -1,0 +1,318 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MasterResume",
+  "description": "Schema for the master resume experience bank with modular, metric-backed bullet points.",
+  "type": "object",
+  "required": [
+    "personal_info",
+    "skills",
+    "experience"
+  ],
+  "properties": {
+    "personal_info": {
+      "type": "object",
+      "required": [
+        "name",
+        "email"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "headline": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "linkedin": {
+          "type": "string"
+        },
+        "github": {
+          "type": "string"
+        },
+        "portfolio": {
+          "type": "string"
+        },
+        "badge_credential": {
+          "type": "string",
+          "description": "Security badge, federal trust, or contractor credential (e.g. DOE PIV Badge)"
+        }
+      }
+    },
+    "professional_summary": {
+      "type": "object",
+      "properties": {
+        "default_pitch": {
+          "type": "string"
+        },
+        "specialties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "experience": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "company",
+          "title",
+          "start_date",
+          "bullets"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "role_title": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string"
+          },
+          "end_date": {
+            "type": "string"
+          },
+          "is_current": {
+            "type": "boolean"
+          },
+          "company_description": {
+            "type": "string"
+          },
+          "bullets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "text",
+                "tags"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "framework": {
+                  "type": "string",
+                  "enum": [
+                    "XYZ",
+                    "CAR",
+                    "STAR",
+                    "OTHER"
+                  ]
+                },
+                "text": {
+                  "type": "string"
+                },
+                "action_x": {
+                  "type": "string",
+                  "description": "Accomplished [X]"
+                },
+                "metric_y": {
+                  "type": "string",
+                  "description": "Measured by [Y]"
+                },
+                "context_z": {
+                  "type": "string",
+                  "description": "By doing [Z]"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Skill domain tags, e.g., #cloud, #leadership, #metrics"
+                },
+                "relevance_keywords": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "variations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "style": {
+                        "type": "string"
+                      },
+                      "text": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Alternative wordings and framings of this accomplishment bullet"
+                }
+              }
+            }
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Skills, tools, and regulatory frameworks specific to this role"
+          }
+        }
+      }
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "tech_stack": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bullets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "education": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "institution",
+          "degree"
+        ],
+        "properties": {
+          "institution": {
+            "type": "string"
+          },
+          "degree": {
+            "type": "string"
+          },
+          "field_of_study": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "graduation_date": {
+            "type": "string"
+          },
+          "gpa_or_honors": {
+            "type": "string"
+          },
+          "coursework": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "certifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "issuer"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "issuer": {
+            "type": "string"
+          },
+          "issue_date": {
+            "type": "string"
+          },
+          "credential_id": {
+            "type": "string"
+          },
+          "credential_url": {
+            "type": "string"
+          },
+          "expiration_date": {
+            "type": "string",
+            "description": "Expiration date (YYYY-MM)"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Skills verified by this credential"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+
+# Python cache and byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Streamlit local state & secrets
+.streamlit/
+!.streamlit/config.toml
+
+# Testing & logs
+.pytest_cache/
+*.log
+
+# Personal Master Resume & Local Overrides (Kept strictly private)
+app/master_resume.json
+app/master_resume.local.json
+app/*.backup
+app/*.bak
+
+# Uploads folder (Keep uploaded PDF/DOCX resumes strictly private)
+uploads/*
+!uploads/.gitkeep
+!uploads/README.md
+
+# Compiled artifacts & temporary files
+*.pdf
+scratch/
+.DS_Store
+
+# Application history archive (Keep tailored application history private)
+data/applications/*.json
+!data/applications/.gitkeep
+data/applications/pdfs/*
+!data/applications/pdfs/.gitkeep
