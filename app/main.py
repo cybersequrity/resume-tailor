@@ -13,6 +13,21 @@ from dotenv import load_dotenv
 # Load local environment variables (.env) if present
 load_dotenv()
 
+import importlib
+import tailor_engine
+import pdf_generator
+import pdf_parser
+import job_scraper
+import history_manager
+import formatting_manager
+
+importlib.reload(tailor_engine)
+importlib.reload(pdf_generator)
+importlib.reload(pdf_parser)
+importlib.reload(job_scraper)
+importlib.reload(history_manager)
+importlib.reload(formatting_manager)
+
 from tailor_engine import (
     ResumeTailorService,
     load_master_resume,
@@ -38,6 +53,13 @@ from history_manager import (
     list_applications,
     get_application_pdf,
     delete_application,
+)
+from formatting_manager import (
+    load_formatting_config,
+    save_formatting_config,
+    compile_theme_css,
+    DEFAULT_THEME,
+    THEME_PRESETS,
 )
 
 # -----------------------------------------------------------------------------
@@ -210,10 +232,11 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-tab_tailor, tab_history, tab_master, tab_diag = st.tabs([
+tab_tailor, tab_history, tab_master, tab_format, tab_diag = st.tabs([
     "🚀 Job Tailoring Studio",
     "📁 Application Archive",
     "🗄️ Master Experience Bank",
+    "🎨 PDF Design & Layout Workshop",
     "🛠️ System Architecture & Status",
 ])
 
@@ -448,7 +471,28 @@ with tab_tailor:
         st.markdown("---")
         st.subheader("4. Clean PDF Export & Application Archive")
 
-        pdf_bytes = generate_resume_pdf(context)
+        if "active_theme_config" not in st.session_state:
+            st.session_state["active_theme_config"] = load_formatting_config()
+        active_theme = st.session_state["active_theme_config"]
+
+        theme_col1, theme_col2 = st.columns([3, 2])
+        with theme_col1:
+            curr_preset = active_theme.get("preset_name", "Executive Modern")
+            preset_options = list(THEME_PRESETS.keys()) + ["Custom Theme"]
+            selected_theme_name = st.selectbox(
+                "🎨 Active PDF Design Theme",
+                options=preset_options,
+                index=preset_options.index(curr_preset) if curr_preset in preset_options else len(preset_options) - 1,
+                help="Switch between design presets or go to the '🎨 PDF Design & Layout Workshop' tab to fine-tune spacing and colors."
+            )
+            if selected_theme_name in THEME_PRESETS and selected_theme_name != curr_preset:
+                st.session_state["active_theme_config"] = dict(THEME_PRESETS[selected_theme_name])
+                active_theme = st.session_state["active_theme_config"]
+                st.rerun()
+        with theme_col2:
+            st.caption("Tip: Use the **🎨 PDF Design & Layout Workshop** tab for granular margin, font size, and table width sliders.")
+
+        pdf_bytes = generate_resume_pdf(context, formatting_config=active_theme)
         md_text = generate_resume_markdown(context)
 
         exp_col1, exp_col2, exp_col3, _ = st.columns([1.5, 1.5, 2, 2])
@@ -487,7 +531,7 @@ with tab_tailor:
                 st.success(f"Saved application version for **{app_rec['company']}** into Application Archive!")
 
         with st.expander("👁️ Preview Rendered HTML Output"):
-            html_preview = render_resume_html(context)
+            html_preview = render_resume_html(context, formatting_config=active_theme)
             st.components.v1.html(html_preview, height=600, scrolling=True)
 
 # -----------------------------------------------------------------------------
@@ -853,7 +897,256 @@ with tab_master:
                     st.error(f"Failed to save: {ex}")
 
 # -----------------------------------------------------------------------------
-# TAB 4: System Architecture & Verification
+# TAB 4: Resume PDF Design & Layout Workshop
+# -----------------------------------------------------------------------------
+with tab_format:
+    st.subheader("🎨 Resume PDF Design & Layout Workshop")
+    st.caption(
+        "Fine-tune every visual dimension of your compiled resume PDF with granular, real-time controls. "
+        "Adjust page margins to pull trailing lines into a clean 2-page fit, dial in typography, "
+        "customize technical competencies table widths, and preview changes instantly without code edits."
+    )
+
+    if "active_theme_config" not in st.session_state:
+        st.session_state["active_theme_config"] = load_formatting_config()
+
+    cfg = st.session_state["active_theme_config"]
+
+    # Top Bar: Preset Selector, Save Default, Reset
+    p_col1, p_col2, p_col3, p_col4 = st.columns([3.5, 2, 2, 2.5])
+    with p_col1:
+        curr_p_name = cfg.get("preset_name", "Executive Modern")
+        preset_names = list(THEME_PRESETS.keys())
+        p_idx = preset_names.index(curr_p_name) if curr_p_name in preset_names else 0
+        selected_preset = st.selectbox(
+            "Quick Design Presets",
+            options=preset_names,
+            index=p_idx,
+            key="studio_preset_sel"
+        )
+    with p_col2:
+        if st.button("✨ Load Preset", use_container_width=True):
+            st.session_state["active_theme_config"] = dict(THEME_PRESETS[selected_preset])
+            cfg = st.session_state["active_theme_config"]
+            st.success(f"Loaded preset '{selected_preset}'!")
+            st.rerun()
+    with p_col3:
+        if st.button("💾 Save as Default", use_container_width=True, help="Save current styling settings as your personal default."):
+            save_formatting_config(cfg)
+            st.success("Saved theme settings to data/formatting_config.json!")
+    with p_col4:
+        if st.button("🔄 Reset to Factory", use_container_width=True):
+            st.session_state["active_theme_config"] = dict(DEFAULT_THEME)
+            save_formatting_config(DEFAULT_THEME)
+            st.info("Reset formatting to factory default.")
+            st.rerun()
+
+    st.markdown("---")
+
+    # Split Layout: Left Controls (5), Right Live Preview (7)
+    ctrl_col, prev_col = st.columns([5, 7])
+
+    with ctrl_col:
+        # 1. Page Margins & Geometry
+        with st.expander("📐 Page Margins & Geometry", expanded=True):
+            st.caption("Adjust margins in inches. Tip: Use 0.35in – 0.40in to fit maximum content onto 2 pages.")
+            m_col1, m_col2 = st.columns(2)
+            with m_col1:
+                top_val = float(cfg.get("page_margin_top", "0.45in").replace("in", ""))
+                new_top = st.slider("Margin Top (in)", min_value=0.20, max_value=0.80, value=top_val, step=0.05, key="cfg_m_top")
+                cfg["page_margin_top"] = f"{new_top:.2f}in"
+
+                left_val = float(cfg.get("page_margin_left", "0.5in").replace("in", ""))
+                new_left = st.slider("Margin Left (in)", min_value=0.25, max_value=0.85, value=left_val, step=0.05, key="cfg_m_left")
+                cfg["page_margin_left"] = f"{new_left:.2f}in"
+            with m_col2:
+                bot_val = float(cfg.get("page_margin_bottom", "0.45in").replace("in", ""))
+                new_bot = st.slider("Margin Bottom (in)", min_value=0.20, max_value=0.80, value=bot_val, step=0.05, key="cfg_m_bot")
+                cfg["page_margin_bottom"] = f"{new_bot:.2f}in"
+
+                right_val = float(cfg.get("page_margin_right", "0.5in").replace("in", ""))
+                new_right = st.slider("Margin Right (in)", min_value=0.25, max_value=0.85, value=right_val, step=0.05, key="cfg_m_right")
+                cfg["page_margin_right"] = f"{new_right:.2f}in"
+
+            pn_c1, pn_c2 = st.columns(2)
+            with pn_c1:
+                cfg["show_page_numbers"] = st.checkbox("Show 'Page X of Y' Footer", value=cfg.get("show_page_numbers", True), key="cfg_show_pn")
+            with pn_c2:
+                if cfg["show_page_numbers"]:
+                    pos_options = ["bottom-right", "bottom-center", "bottom-left"]
+                    curr_pos = cfg.get("page_number_position", "bottom-right")
+                    cfg["page_number_position"] = st.selectbox("Page Number Position", options=pos_options, index=pos_options.index(curr_pos) if curr_pos in pos_options else 0, key="cfg_pn_pos")
+
+        # 2. Typography & Color Palette
+        with st.expander("🔤 Global Typography & Colors", expanded=False):
+            font_choices = {
+                "Modern Clean Sans (Segoe UI / Arial / Helvetica)": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+                "Classic Editorial Serif (Times / Georgia / Garamond)": "'Times New Roman', Times, 'Liberation Serif', Georgia, serif",
+                "Technical System Sans (Inter / System UI)": "'Inter', 'Segoe UI', system-ui, sans-serif",
+                "Clean Technical Monospace (Consolas / Courier)": "Consolas, 'Courier New', Courier, monospace"
+            }
+            curr_family = cfg.get("font_family", "")
+            f_idx = 0
+            for i, (k, v) in enumerate(font_choices.items()):
+                if v == curr_family:
+                    f_idx = i
+                    break
+
+            selected_font_label = st.selectbox("Font Family", options=list(font_choices.keys()), index=f_idx, key="cfg_font_sel")
+            cfg["font_family"] = font_choices[selected_font_label]
+
+            t_c1, t_c2 = st.columns(2)
+            with t_c1:
+                base_val = float(cfg.get("font_size_base", "9.5pt").replace("pt", ""))
+                new_base = st.slider("Base Body Font Size (pt)", min_value=8.0, max_value=11.0, value=base_val, step=0.1, key="cfg_font_base")
+                cfg["font_size_base"] = f"{new_base:.1f}pt"
+            with t_c2:
+                lh_val = float(cfg.get("line_height_base", "1.35"))
+                new_lh = st.slider("Base Line Height", min_value=1.15, max_value=1.60, value=lh_val, step=0.05, key="cfg_lh_base")
+                cfg["line_height_base"] = f"{new_lh:.2f}"
+
+            st.markdown("###### Color Palette")
+            cp1, cp2 = st.columns(2)
+            with cp1:
+                cfg["color_accent"] = st.color_picker("Primary Accent Color (Links, Badges)", value=cfg.get("color_accent", "#2563eb"), key="cfg_col_acc")
+                cfg["color_headings"] = st.color_picker("Headings & Name Color", value=cfg.get("color_headings", "#0f172a"), key="cfg_col_head")
+            with cp2:
+                cfg["color_body"] = st.color_picker("Body Text Color", value=cfg.get("color_body", "#334155"), key="cfg_col_body")
+                cfg["color_subtle"] = st.color_picker("Subtle & Metadata Color (Dates, Loc)", value=cfg.get("color_subtle", "#64748b"), key="cfg_col_sub")
+
+        # 3. Header Section & Contact Info
+        with st.expander("🏷️ Header & Contact Bar", expanded=False):
+            h_align = cfg.get("header_alignment", "center")
+            cfg["header_alignment"] = st.radio("Header Alignment", options=["center", "left"], index=0 if h_align == "center" else 1, horizontal=True, key="cfg_h_align")
+
+            h_c1, h_c2 = st.columns(2)
+            with h_c1:
+                name_pt = float(cfg.get("font_size_name", "20pt").replace("pt", ""))
+                new_name_pt = st.slider("Name Size (pt)", min_value=14.0, max_value=28.0, value=name_pt, step=0.5, key="cfg_name_pt")
+                cfg["font_size_name"] = f"{new_name_pt:.1f}pt"
+                cfg["name_uppercase"] = st.checkbox("UPPERCASE Candidate Name", value=cfg.get("name_uppercase", True), key="cfg_name_case")
+            with h_c2:
+                hl_pt = float(cfg.get("font_size_headline", "10.5pt").replace("pt", ""))
+                new_hl_pt = st.slider("Headline Size (pt)", min_value=8.5, max_value=14.0, value=hl_pt, step=0.5, key="cfg_hl_pt")
+                cfg["font_size_headline"] = f"{new_hl_pt:.1f}pt"
+
+                cont_pt = float(cfg.get("contact_font_size", "8.5pt").replace("pt", ""))
+                new_cont_pt = st.slider("Contact Links Size (pt)", min_value=7.5, max_value=10.5, value=cont_pt, step=0.2, key="cfg_cont_pt")
+                cfg["contact_font_size"] = f"{new_cont_pt:.1f}pt"
+
+            h_b1, h_b2 = st.columns(2)
+            with h_b1:
+                h_b_width = float(cfg.get("header_border_bottom_width", "1.5px").replace("px", ""))
+                new_hb_w = st.slider("Bottom Divider Width (px)", min_value=0.0, max_value=4.0, value=h_b_width, step=0.5, key="cfg_hb_w")
+                cfg["header_border_bottom_width"] = f"{new_hb_w:.1f}px"
+            with h_b2:
+                cfg["color_header_bottom_border"] = st.color_picker("Header Divider Color", value=cfg.get("color_header_bottom_border", "#2d3748"), key="cfg_hb_col")
+
+        # 4. Core Competencies Table Alignment
+        with st.expander("📊 Core Competencies Table Alignment", expanded=False):
+            st.caption("Fine-tune category label column width and row spacing to ensure clean alignment with zero awkward whitespace.")
+            cw_val = int(cfg.get("skills_label_width", "172px").replace("px", ""))
+            new_cw = st.slider("Category Label Column Width (px)", min_value=120, max_value=240, value=cw_val, step=2, key="cfg_cw")
+            cfg["skills_label_width"] = f"{new_cw}px"
+
+            c_r1, c_r2 = st.columns(2)
+            with c_r1:
+                pad_val = float(cfg.get("skills_row_padding", "2px").replace("px", ""))
+                new_pad = st.slider("Table Row Spacing (px)", min_value=0.5, max_value=6.0, value=pad_val, step=0.5, key="cfg_pad")
+                cfg["skills_row_padding"] = f"{new_pad:.1f}px"
+            with c_r2:
+                cfg["skills_label_color"] = st.color_picker("Category Label Color", value=cfg.get("skills_label_color", "#0f172a"), key="cfg_sk_col")
+
+            cfg["skills_values_alignment"] = st.radio("Competencies Values Alignment", options=["justify", "left"], index=0 if cfg.get("skills_values_alignment", "justify") == "justify" else 1, horizontal=True, key="cfg_sk_align")
+
+        # 5. Professional Experience & Bullets Spacing
+        with st.expander("💼 Experience Roles & Bullets Spacing", expanded=False):
+            e_c1, e_c2 = st.columns(2)
+            with e_c1:
+                rm_val = int(cfg.get("role_margin_bottom", "9px").replace("px", ""))
+                new_rm = st.slider("Spacing Between Jobs (px)", min_value=3, max_value=20, value=rm_val, step=1, key="cfg_rm")
+                cfg["role_margin_bottom"] = f"{new_rm}px"
+
+                rt_val = float(cfg.get("font_size_role_title", "10pt").replace("pt", ""))
+                new_rt = st.slider("Job Title Font Size (pt)", min_value=8.5, max_value=12.0, value=rt_val, step=0.2, key="cfg_rt")
+                cfg["font_size_role_title"] = f"{new_rt:.1f}pt"
+            with e_c2:
+                cfg["company_name_color"] = st.color_picker("Company Name Color", value=cfg.get("company_name_color", "#2563eb"), key="cfg_comp_col")
+                cfg["show_role_competencies"] = st.checkbox("Show Role-Specific Skills Sub-line", value=cfg.get("show_role_competencies", True), key="cfg_show_rskills")
+
+            st.markdown("###### Accomplishment Bullets Geometry")
+            b_c1, b_c2 = st.columns(2)
+            with b_c1:
+                bind_val = int(cfg.get("bullet_indent", "16px").replace("px", ""))
+                new_bind = st.slider("Bullet Left Indent (px)", min_value=8, max_value=32, value=bind_val, step=2, key="cfg_bind")
+                cfg["bullet_indent"] = f"{new_bind}px"
+
+                bsp_val = float(cfg.get("bullet_spacing", "3px").replace("px", ""))
+                new_bsp = st.slider("Spacing Between Bullets (px)", min_value=0.5, max_value=8.0, value=bsp_val, step=0.5, key="cfg_bsp")
+                cfg["bullet_spacing"] = f"{new_bsp:.1f}px"
+            with b_c2:
+                b_styles = ["disc", "circle", "square", "hyphen", "none"]
+                curr_bs = cfg.get("bullet_symbol", "disc")
+                cfg["bullet_symbol"] = st.selectbox("Bullet Marker Style", options=b_styles, index=b_styles.index(curr_bs) if curr_bs in b_styles else 0, key="cfg_bs")
+
+                cfg["bullet_alignment"] = st.radio("Bullet Text Alignment", options=["justify", "left"], index=0 if cfg.get("bullet_alignment", "justify") == "justify" else 1, horizontal=True, key="cfg_balign")
+
+        # 6. Section Titles & Spacing
+        with st.expander("📌 Section Titles & Dividers", expanded=False):
+            sec_c1, sec_c2 = st.columns(2)
+            with sec_c1:
+                st_val = float(cfg.get("font_size_section_title", "10.5pt").replace("pt", ""))
+                new_st = st.slider("Section Title Size (pt)", min_value=8.5, max_value=13.0, value=st_val, step=0.2, key="cfg_st_val")
+                cfg["font_size_section_title"] = f"{new_st:.1f}pt"
+                cfg["section_title_uppercase"] = st.checkbox("UPPERCASE Section Titles", value=cfg.get("section_title_uppercase", True), key="cfg_st_case")
+            with sec_c2:
+                sec_gap = int(cfg.get("section_spacing", "11px").replace("px", ""))
+                new_sec_gap = st.slider("Spacing Between Sections (px)", min_value=4, max_value=22, value=sec_gap, step=1, key="cfg_sec_gap")
+                cfg["section_spacing"] = f"{new_sec_gap}px"
+
+                cfg["color_border"] = st.color_picker("Section Divider Line Color", value=cfg.get("color_border", "#cbd5e1"), key="cfg_sec_div_col")
+
+        # 7. Advanced Custom CSS Overrides
+        with st.expander("💻 Advanced Custom CSS Overrides", expanded=False):
+            st.caption("Inject arbitrary CSS rules directly into the compiled PDF template. Perfect for bespoke styling tweaks.")
+            cfg["custom_css"] = st.text_area(
+                "Custom CSS Code",
+                value=cfg.get("custom_css", ""),
+                height=120,
+                placeholder="/* Example: */\n.company-name { font-style: italic; }\n.summary-text { letter-spacing: 0.2px; }",
+                key="cfg_custom_css"
+            )
+
+    # Right Column: Live Viewport Preview & One-Click PDF Export
+    with prev_col:
+        st.markdown("##### 👁️ Live PDF & Layout Preview")
+        st.caption("Live render reflects all margin, typography, table alignment, and color tweaks above.")
+
+        # Load master data for live preview
+        preview_data = master_data if "master_data" in locals() and master_data else load_master_resume()
+        preview_ctx = prepare_resume_context(preview_data, {"role_fit_analysis": {"recommended_bullets": []}}, formatting_config=cfg)
+        live_html = render_resume_html(preview_ctx, formatting_config=cfg)
+
+        st.components.v1.html(live_html, height=750, scrolling=True)
+
+        prev_btn1, prev_btn2 = st.columns([1, 1])
+        with prev_btn1:
+            live_pdf_bytes = generate_resume_pdf(preview_ctx, formatting_config=cfg)
+            st.download_button(
+                label="📄 Download Formatted WeasyPrint PDF",
+                data=live_pdf_bytes,
+                file_name="resume_formatted.pdf",
+                mime="application/pdf",
+                type="primary",
+                use_container_width=True,
+            )
+        with prev_btn2:
+            if st.button("💾 Apply & Save This Styling", use_container_width=True, key="save_theme_bottom"):
+                save_formatting_config(cfg)
+                st.success("Theme preferences saved to data/formatting_config.json!")
+
+# -----------------------------------------------------------------------------
+# TAB 5: System Architecture & Verification
 # -----------------------------------------------------------------------------
 with tab_diag:
     st.subheader("System Architecture & Diagnostic Checks")

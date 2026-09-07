@@ -4,15 +4,74 @@
   <meta charset="UTF-8">
   <title>{{ personal_info.name }} - Resume</title>
   <style>
+    /* Injected Dynamic Theme CSS & Custom Variables */
+    {% if custom_css_vars %}
+    {{ custom_css_vars | safe }}
+    {% endif %}
+
+    :root {
+      --page-margin-top: 0.45in;
+      --page-margin-bottom: 0.45in;
+      --page-margin-left: 0.5in;
+      --page-margin-right: 0.5in;
+
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-size-base: 9.5pt;
+      --line-height-base: 1.35;
+
+      --color-accent: #2563eb;
+      --color-headings: #0f172a;
+      --color-body: #334155;
+      --color-subtle: #64748b;
+      --color-border: #cbd5e1;
+      --color-header-border: #2d3748;
+
+      --header-align: center;
+      --header-margin-bottom: 12px;
+      --header-border-width: 1.5px;
+      --contact-align: center;
+      --font-size-name: 20pt;
+      --font-weight-name: 700;
+      --name-transform: uppercase;
+      --font-size-headline: 10.5pt;
+      --contact-font-size: 8.5pt;
+
+      --summary-align: justify;
+      --summary-line-height: 1.4;
+      --summary-margin-bottom: 11px;
+
+      --skills-label-width: 172px;
+      --skills-row-padding: 2px;
+      --skills-label-color: #0f172a;
+      --skills-val-align: justify;
+      --font-size-skills-table: 8.8pt;
+
+      --section-spacing: 11px;
+      --section-title-size: 10.5pt;
+      --section-title-transform: uppercase;
+      --section-title-spacing: 0.8px;
+      --section-title-border-width: 1px;
+      --section-title-margin-bottom: 6px;
+
+      --role-margin-bottom: 9px;
+      --role-title-size: 10pt;
+      --role-title-color: #0f172a;
+      --company-color: #2563eb;
+      --dates-loc-size: 8.8pt;
+      --role-skills-size: 8.3pt;
+      --role-skills-display: block;
+
+      --bullet-indent: 16px;
+      --bullet-spacing: 3px;
+      --bullet-line-height: 1.35;
+      --bullet-align: justify;
+      --bullet-size: 9.2pt;
+      --bullet-style: disc;
+    }
+
     @page {
       size: letter;
-      margin: 0.45in 0.5in 0.45in 0.5in;
-      @bottom-right {
-        content: counter(page) " of " counter(pages);
-        font-size: 8pt;
-        color: #718096;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      }
+      margin: var(--page-margin-top) var(--page-margin-right) var(--page-margin-bottom) var(--page-margin-left);
     }
 
     * {
@@ -22,73 +81,73 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      font-size: 9.5pt;
-      line-height: 1.35;
-      color: #1a202c;
+      font-family: var(--font-body);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-base);
+      color: var(--color-body);
       background: #ffffff;
     }
 
     a {
-      color: #1a365d;
+      color: var(--color-accent);
       text-decoration: none;
     }
 
     .header {
-      text-align: center;
-      margin-bottom: 12px;
+      text-align: var(--header-align);
+      margin-bottom: var(--header-margin-bottom);
       padding-bottom: 6px;
-      border-bottom: 1.5px solid #2d3748;
+      border-bottom: var(--header-border-width) solid var(--color-header-border);
     }
 
     .header h1 {
-      font-size: 20pt;
-      font-weight: 700;
+      font-size: var(--font-size-name);
+      font-weight: var(--font-weight-name);
       letter-spacing: -0.5px;
-      color: #0f172a;
+      color: var(--color-headings);
       margin-bottom: 2px;
-      text-transform: uppercase;
+      text-transform: var(--name-transform);
     }
 
     .header .headline {
-      font-size: 10.5pt;
+      font-size: var(--font-size-headline);
       font-weight: 600;
-      color: #334155;
+      color: var(--color-body);
       margin-bottom: 5px;
     }
 
     .contact-links {
-      font-size: 8.5pt;
-      color: #475569;
+      font-size: var(--contact-font-size);
+      color: var(--color-subtle);
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: var(--contact-align);
       gap: 6px;
     }
 
     .contact-links span.sep {
-      color: #94a3b8;
+      color: var(--color-border);
     }
 
     .section {
-      margin-bottom: 11px;
+      margin-bottom: var(--section-spacing);
     }
 
     .section-title {
-      font-size: 10.5pt;
+      font-size: var(--section-title-size);
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #0f172a;
-      border-bottom: 1px solid #cbd5e1;
+      text-transform: var(--section-title-transform);
+      letter-spacing: var(--section-title-spacing);
+      color: var(--color-headings);
+      border-bottom: var(--section-title-border-width) solid var(--color-border);
       padding-bottom: 2px;
-      margin-bottom: 6px;
+      margin-bottom: var(--section-title-margin-bottom);
     }
 
     .summary-text {
-      text-align: justify;
-      color: #334155;
-      line-height: 1.4;
+      text-align: var(--summary-align);
+      color: var(--color-body);
+      line-height: var(--summary-line-height);
     }
 
     .competencies-table {
@@ -104,27 +163,27 @@
     }
 
     .comp-label {
-      width: 172px;
-      font-size: 8.8pt;
+      width: var(--skills-label-width);
+      font-size: var(--font-size-skills-table);
       font-weight: 700;
-      color: #0f172a;
+      color: var(--skills-label-color);
       vertical-align: top;
-      padding: 2px 8px 2px 0;
+      padding: var(--skills-row-padding) 8px var(--skills-row-padding) 0;
       line-height: 1.35;
       white-space: nowrap;
     }
 
     .comp-values {
-      font-size: 8.8pt;
-      color: #334155;
+      font-size: var(--font-size-skills-table);
+      color: var(--color-body);
       vertical-align: top;
-      padding: 2px 0 2px 0;
+      padding: var(--skills-row-padding) 0 var(--skills-row-padding) 0;
       line-height: 1.35;
-      text-align: justify;
+      text-align: var(--skills-val-align);
     }
 
     .experience-item {
-      margin-bottom: 9px;
+      margin-bottom: var(--role-margin-bottom);
       page-break-inside: avoid;
     }
 
@@ -135,53 +194,56 @@
     }
 
     .role-title {
-      font-size: 10pt;
+      font-size: var(--role-title-size);
       font-weight: 700;
-      color: #0f172a;
+      color: var(--role-title-color);
     }
 
     .dates {
-      font-size: 8.8pt;
+      font-size: var(--dates-loc-size);
       font-weight: 600;
-      color: #475569;
+      color: var(--color-subtle);
       text-align: right;
     }
 
     .company-name {
       font-size: 9.5pt;
       font-weight: 600;
-      color: #2563eb;
+      color: var(--company-color);
     }
 
     .location {
-      font-size: 8.8pt;
-      color: #64748b;
+      font-size: var(--dates-loc-size);
+      color: var(--color-subtle);
       font-style: italic;
       text-align: right;
     }
 
     .role-skills {
-      font-size: 8.3pt;
-      color: #475569;
+      display: var(--role-skills-display);
+      font-size: var(--role-skills-size);
+      color: var(--color-subtle);
       margin-top: 2px;
       margin-bottom: 2px;
     }
 
     .role-skills strong {
-      color: #1e293b;
+      color: var(--color-headings);
     }
 
     ul.bullets {
       margin-top: 3px;
-      margin-left: 16px;
+      margin-left: var(--bullet-indent);
       padding-left: 0;
+      list-style-type: var(--bullet-style);
     }
 
     ul.bullets li {
-      margin-bottom: 3px;
-      color: #334155;
-      line-height: 1.35;
-      text-align: justify;
+      margin-bottom: var(--bullet-spacing);
+      color: var(--color-body);
+      line-height: var(--bullet-line-height);
+      text-align: var(--bullet-align);
+      font-size: var(--bullet-size);
     }
 
     .project-item, .education-item {
@@ -197,18 +259,18 @@
 
     .project-name, .degree {
       font-weight: 700;
-      color: #0f172a;
+      color: var(--color-headings);
     }
 
     .project-tech {
       font-style: italic;
-      color: #64748b;
-      font-size: 8.8pt;
+      color: var(--color-subtle);
+      font-size: var(--dates-loc-size);
     }
 
     .institution {
       font-weight: 600;
-      color: #2563eb;
+      color: var(--color-accent);
     }
 
     .cert-item {
@@ -220,11 +282,11 @@
 
     .cert-name {
       font-weight: 600;
-      color: #1e293b;
+      color: var(--color-headings);
     }
 
     .cert-issuer {
-      color: #64748b;
+      color: var(--color-subtle);
     }
   </style>
 </head>

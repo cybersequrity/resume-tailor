@@ -55,8 +55,9 @@ uploads/*
 scratch/
 .DS_Store
 
-# Application history archive (Keep tailored application history private)
+# Application history & custom formatting (Keep private locally)
 data/applications/*.json
 !data/applications/.gitkeep
 data/applications/pdfs/*
 !data/applications/pdfs/.gitkeep
+data/formatting_config.json

@@ -4,9 +4,14 @@ Renders Jinja2 HTML templates and exports print-ready PDFs using WeasyPrint.
 """
 
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Union
 import jinja2
 import weasyprint
+
+try:
+    from formatting_manager import compile_theme_css, load_formatting_config
+except ImportError:
+    from app.formatting_manager import compile_theme_css, load_formatting_config
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 RESUME_TEMPLATE_NAME = "resume.html"
@@ -22,10 +27,15 @@ def get_jinja_env(templates_dir: Path = TEMPLATES_DIR) -> jinja2.Environment:
     return env
 
 
-def prepare_resume_context(master_resume: Dict[str, Any], tailored_analysis: Dict[str, Any]) -> Dict[str, Any]:
+def prepare_resume_context(
+    master_resume: Dict[str, Any],
+    tailored_analysis: Dict[str, Any],
+    formatting_config: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """
     Merge master resume baseline data (contact, education, certs, projects)
-    with tailored recommendations (tailored summary, selected/rewritten bullets, filtered skills).
+    with tailored recommendations (tailored summary, selected/rewritten bullets, filtered skills)
+    and compiled formatting styling variables.
     """
     context = dict(master_resume)
 
@@ -60,19 +70,44 @@ def prepare_resume_context(master_resume: Dict[str, Any], tailored_analysis: Dic
 
         context["experience"] = tailored_exp
 
+    # Wire in dynamic formatting configuration & CSS Custom Properties
+    fmt_cfg = formatting_config or load_formatting_config()
+    context["formatting_config"] = fmt_cfg
+    context["custom_css_vars"] = compile_theme_css(fmt_cfg)
+
     return context
 
 
-def render_resume_html(context: Dict[str, Any], template_name: str = RESUME_TEMPLATE_NAME) -> str:
-    """Render the resume context to an HTML string."""
+def render_resume_html(
+    context: Dict[str, Any],
+    template_name: str = RESUME_TEMPLATE_NAME,
+    formatting_config: Optional[Dict[str, Any]] = None,
+) -> str:
+    """Render the resume context to an HTML string with dynamic CSS custom properties."""
+    ctx = dict(context)
+    if formatting_config is not None:
+        ctx["formatting_config"] = formatting_config
+        ctx["custom_css_vars"] = compile_theme_css(formatting_config)
+    elif "custom_css_vars" not in ctx:
+        fmt_cfg = load_formatting_config()
+        ctx["formatting_config"] = fmt_cfg
+        ctx["custom_css_vars"] = compile_theme_css(fmt_cfg)
+
     env = get_jinja_env()
     template = env.get_template(template_name)
-    return template.render(**context)
+    return template.render(**ctx)
 
 
-def generate_resume_pdf(context: Dict[str, Any], template_name: str = RESUME_TEMPLATE_NAME) -> bytes:
-    """Generate PDF bytes from resume context via WeasyPrint."""
-    html_content = render_resume_html(context, template_name)
+def generate_resume_pdf(
+    context: Union[Dict[str, Any], str],
+    template_name: str = RESUME_TEMPLATE_NAME,
+    formatting_config: Optional[Dict[str, Any]] = None,
+) -> bytes:
+    """Generate PDF bytes from resume context dict or rendered HTML string via WeasyPrint."""
+    if isinstance(context, str):
+        html_content = context
+    else:
+        html_content = render_resume_html(context, template_name, formatting_config)
     pdf_bytes = weasyprint.HTML(string=html_content).write_pdf()
     return pdf_bytes
 
